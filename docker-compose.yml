@@ -1,0 +1,29 @@
+version: '3.7'
+
+
+volumes:
+  database:
+    driver: local
+
+
+services:
+
+  api:
+    build: api
+    depends_on:
+      - redis
+    ports:
+      - 8080:8000
+
+  bot:
+    build: bot
+    environment:
+      - CARAMELLA_TOKEN
+    depends_on:
+      - api
+
+  redis:
+    image: redis:5
+    command: redis-server --appendonly yes
+    volumes:
+      - ./data:/data
